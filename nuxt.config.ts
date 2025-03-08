@@ -5,6 +5,11 @@ const currentDir = dirname(fileURLToPath(import.meta.url));
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  nitro: {
+    prerender: {
+      autoSubfolderIndex: false,
+    },
+  },
   modules: [
     '@nuxthq/studio',
     '@nuxtjs/tailwindcss',
