@@ -1,0 +1,13 @@
+version: "3"
+services:
+  nuxt-service:
+    container_name: nuxt-service
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3051:3051"
+    networks:
+      - nuxt-service-network
+networks:
+  nuxt-service-network:
