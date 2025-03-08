@@ -6,6 +6,7 @@ const currentDir = dirname(fileURLToPath(import.meta.url));
 export default defineNuxtConfig({
   devtools: { enabled: true },
   nitro: {
+    preset: 'cloudflare-pages',
     prerender: {
       autoSubfolderIndex: false,
     },
