@@ -18,6 +18,9 @@ RUN pnpm build
 
 EXPOSE 3051
 
-ENTRYPOINT ["pnpm"]
+# 设置环境变量，确保服务在 3051 端口启动
+ENV PORT=3051
+ENV HOST=0.0.0.0
 
-CMD ["start-nuxt-service"]
+# 使用 node 直接运行构建后的服务器文件
+CMD ["node", ".output/server/index.mjs"]
