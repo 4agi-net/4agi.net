@@ -128,7 +128,7 @@
                   <div class="flex items-center gap-2">
                     <div class="flex size-8 items-center justify-center rounded-md border">
                       <Icon
-                        :name="getCategoryIcon(mcp.category)"
+                        :name="mcp.icon || getCategoryIcon(mcp.category)"
                         class="size-4"
                       />
                     </div>
