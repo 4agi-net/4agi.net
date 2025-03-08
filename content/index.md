@@ -11,7 +11,7 @@ announcement:
   to: /docs/cursor/introduction
 actions:
   - name: 立即探索
-    to: /getting-started/introduction
+    to: /posts
   - name: GitHub
     variant: outline
     to: https://github.com/4agi-net/4agi.net
