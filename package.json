@@ -43,7 +43,8 @@
     "typecheck": "nuxt typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "taze": "taze"
+    "taze": "taze",
+    "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.28",

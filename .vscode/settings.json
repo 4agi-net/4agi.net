@@ -45,5 +45,10 @@
     "graphql",
     "astro"
   ],
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "workbench.editorAssociations": {
+    "*.mdc": "default"
+  },
+  "markdownPasteImage.showFilePathConfirmInputBox": true,
+  "markdownPasteImage.imageFolderPath": "${currentFileDir}/assets"
 }
