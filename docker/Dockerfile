@@ -13,7 +13,7 @@ COPY package.json ./
 COPY . .
 
 # 清空可能存在的 node_modules 目录和 pnpm 缓存
-# RUN rm -rf node_modules && pnpm store prune
+RUN rm -rf node_modules && pnpm store prune
 
 RUN pnpm install
 
