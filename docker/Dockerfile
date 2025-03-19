@@ -4,10 +4,9 @@ RUN mkdir -p /home/app/
 
 WORKDIR /home/app/
 
-# 安装特定版本的 pnpm，与项目兼容
-RUN npm i pnpm@10.6.4 -g
-
 COPY . .
+
+RUN npm i pnpm@10.6.4 -g
 
 RUN rm -f pnpm-lock.yaml
 
