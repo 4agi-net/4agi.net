@@ -13,6 +13,9 @@ RUN npm i pnpm@10.6.4 -g
 # 清空可能存在的 node_modules 目录和 pnpm 缓存
 # RUN rm -rf node_modules && pnpm store prune
 
+# 设置Node.js的内存限制为8GB
+ENV NODE_OPTIONS="--max-old-space-size=8192"
+
 RUN pnpm install
 
 RUN pnpm build
