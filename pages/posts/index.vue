@@ -44,35 +44,35 @@
 </template>
 
 <script setup lang="ts">
-import type { ParsedContent } from '@nuxt/content/dist/runtime/types'
+import type { ParsedContent } from '@nuxt/content/dist/runtime/types';
 import ContentHero from '@/components/content/Hero.vue';
 import PostAvatarGroup from '@/components/post/AvatarGroup.vue';
 import PostCard from '@/components/post/Card.vue';
 
 interface PageData {
-  title: string
-  description: string
+  title: string;
+  description: string;
   actions: Array<{
-    leftIcon: string
-    name: string
-    to: string
-    target: string
-    variant: string
-  }>
+    leftIcon: string;
+    name: string;
+    to: string;
+    target: string;
+    variant: string;
+  }>;
 }
 
 interface Article extends ParsedContent {
-  title: string
-  description?: string
-  image?: string
-  category?: string
-  date: string
+  title: string;
+  description?: string;
+  image?: string;
+  category?: string;
+  date: string;
   authors: Array<{
-    username: string
+    username: string;
     avatar?: {
-      src: string
-    }
-  }>
+      src: string;
+    };
+  }>;
 }
 
 const config = useConfig();
@@ -98,28 +98,34 @@ const pageData = ref<PageData>({
 });
 
 const { data } = useAsyncData('content', async () => {
-  return queryContent('/').find()
+  return queryContent('/').find();
 });
 
 const articles = computed<Article[]>(() => {
-  if (!data.value) return []
+  if (!data.value)
+    return [];
 
-  let articlesData: Article[] = []
+  let articlesData: Article[] = [];
 
-  data.value.forEach(v => {
-    if(v._path?.startsWith('/posts') && v._type == 'markdown') {
-      articlesData.push(v)
+  data.value.forEach((v) => {
+    if (v._path?.startsWith('/posts') && v._type == 'markdown') {
+      articlesData.push(v);
     }
-  })
-  return articlesData.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-})
+  });
+  return articlesData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+});
 
 useSeoMeta({
   title: `${pageData.value.title ?? '404'} - ${config.value.site.name}`,
   ogTitle: pageData.value.title,
   description: pageData.value.description,
   ogDescription: pageData.value.description,
-  ogImage: config.value.site.ogImage,
+  // ogImage: config.value.site.ogImage,
   twitterCard: 'summary_large_image',
+});
+
+defineOgImageComponent(config.value.site.ogImageComponent, {
+  title: pageData.value?.title,
+  description: pageData.value?.description,
 });
 </script>

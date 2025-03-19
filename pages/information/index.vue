@@ -243,8 +243,13 @@ useSeoMeta({
   ogTitle: pageData.value.title,
   description: pageData.value.description,
   ogDescription: pageData.value.description,
-  ogImage: config.value.site.ogImage,
+  // ogImage: config.value.site.ogImage,
   twitterCard: 'summary_large_image',
+});
+
+defineOgImageComponent(config.value.site.ogImageComponent, {
+  title: pageData.value?.title,
+  description: pageData.value?.description,
 });
 
 // 计算箭头方向
