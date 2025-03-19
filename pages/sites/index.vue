@@ -122,7 +122,7 @@
             class="group h-full overflow-hidden transition-all hover:shadow-md"
             :class="{ compact: isCompactGrid }"
           >
-            <NuxtLink :to="product.url" target="_blank" class="block h-full">
+            <NuxtLink :to="product.toolify_ai_url" target="_blank" class="block h-full">
               <div class="relative">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                 <div
@@ -132,22 +132,22 @@
                 >
                   <!-- 如果有产品图片，优先显示产品图片 -->
                   <img
-                    v-if="product.image"
-                    :src="product.image"
+                    v-if="product.screenshot_urls[0]"
+                    :src="product.screenshot_urls[0]"
                     :alt="product.title"
                     class="absolute inset-0 size-full object-cover transition-transform duration-300 group-hover:scale-110"
                     @error="handleImageError"
                   >
                   <!-- 图片加载失败时显示标题 -->
                   <div
-                    v-if="product.image"
+                    v-if="product.screenshot_urls[0]"
                     class="image-fallback absolute inset-0 hidden flex-col items-center justify-center bg-card/50 p-2 text-center"
                   >
                     <span class="font-bold text-muted-foreground" :class="[isCompactGrid ? 'text-lg' : 'text-xl']">{{ product.title }}</span>
                   </div>
 
                   <!-- 没有图片时显示背景色 -->
-                  <div v-if="!product.image" class="absolute inset-0 bg-muted/10" />
+                  <div v-if="!product.screenshot_urls[0]" class="absolute inset-0 bg-muted/10" />
 
                   <!-- Logo 放在右下角 -->
                   <div class="z-99 absolute right-4" :class="[isCompactGrid ? '-bottom-4' : '-bottom-5']">
@@ -156,8 +156,8 @@
                       :class="[isCompactGrid ? 'size-10' : 'size-12']"
                     >
                       <img
-                        :src="product.logo || defaultLogoUrl"
-                        :alt="product.title"
+                        :src="product.logo_url || defaultLogoUrl"
+                        :alt="product.name"
                         class="logo size-full object-contain p-1.5"
                         @error="handleLogoError"
                       >
@@ -165,7 +165,7 @@
                         class="logo-fallback hidden size-full items-center justify-center bg-primary/5 font-bold text-primary"
                         :class="[isCompactGrid ? 'text-lg' : 'text-xl']"
                       >
-                        {{ product.title.charAt(0).toUpperCase() }}
+                        {{ product.name.charAt(0).toUpperCase() }}
                       </div>
                     </div>
                   </div>
@@ -177,14 +177,14 @@
               </div>
               <UiCardHeader :class="{ 'p-3': isCompactGrid, 'p-4': !isCompactGrid }">
                 <UiCardTitle :class="{ 'text-base': isCompactGrid }">
-                  {{ product.title }}
+                  {{ product.name }}
                 </UiCardTitle>
                 <UiCardDescription
                   :class="[
                     isCompactGrid ? 'line-clamp-1 text-xs' : 'line-clamp-2 text-sm',
                   ]"
                 >
-                  {{ product.description }}
+                  {{ product.short_description }}
                 </UiCardDescription>
               </UiCardHeader>
               <UiCardFooter
@@ -225,6 +225,8 @@
 
 <script setup lang="ts">
 import ContentHero from '@/components/content/Hero.vue';
+import categories from './categories.json';
+import products from './products.json';
 
 interface PageData {
   title: string;
@@ -251,533 +253,14 @@ const defaultLogoUrl = 'https://placehold.co/200x200/f5f5f5/a3a3a3?text=Logo';
 const _defaultImageUrl = 'https://placehold.co/800x400/f5f5f5/a3a3a3?text=Image';
 
 // 分类数据
-const categories = [
-  { id: 'llm', name: '大语言模型' },
-  { id: 'coding', name: 'AI编程工具' },
-  { id: 'image', name: 'AI图像生成' },
-  { id: 'audio-video', name: 'AI音频和视频' },
-  { id: 'research', name: 'AI研究和开发' },
-  { id: 'assistant', name: 'AI助手和工具' },
-];
-
-// 产品数据
-const products = [
-  // 大语言模型
-  {
-    id: 'chatgpt',
-    title: 'ChatGPT',
-    description: 'OpenAI开发的对话式大语言模型，支持GPT-3.5和GPT-4',
-    provider: 'OpenAI',
-    category: 'llm',
-    url: 'https://chat.openai.com',
-    icon: 'simple-icons:openai',
-    iconColor: 'text-emerald-500',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/1200px-ChatGPT_logo.svg.png',
-    image: 'https://images.unsplash.com/photo-1693118142978-f6679bebeadc?q=80&w=1000',
-  },
-  {
-    id: 'claude',
-    title: 'Claude',
-    description: 'Anthropic开发的对话式AI助手，以安全性和有用性著称',
-    provider: 'Anthropic',
-    category: 'llm',
-    url: 'https://claude.ai',
-    icon: 'simple-icons:anthropic',
-    iconColor: 'text-purple-500',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Anthropic_Logo.svg/1200px-Anthropic_Logo.svg.png',
-    image: '',
-  },
-  {
-    id: 'gemini',
-    title: 'Gemini',
-    description: 'Google开发的多模态大语言模型，支持文本、图像和音频输入',
-    provider: 'Google',
-    category: 'llm',
-    url: 'https://gemini.google.com',
-    icon: 'simple-icons:google',
-    iconColor: 'text-blue-500',
-    logo: 'https://storage.googleapis.com/gweb-uniblog-publish-prod/images/gemini_1.max-1000x1000.png',
-    image: '',
-  },
-  {
-    id: 'llama',
-    title: 'Llama',
-    description: 'Meta开发的开源大语言模型，可本地部署和自定义训练',
-    provider: 'Meta',
-    category: 'llm',
-    url: 'https://llama.meta.com',
-    icon: 'simple-icons:meta',
-    iconColor: 'text-blue-400',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Meta_Platforms_Inc._logo.svg/1200px-Meta_Platforms_Inc._logo.svg.png',
-    image: '',
-  },
-  {
-    id: 'gpt4all',
-    title: 'GPT4All',
-    description: '开源的本地运行大语言模型，无需互联网连接即可使用',
-    provider: 'Nomic AI',
-    category: 'llm',
-    url: 'https://gpt4all.io',
-    icon: 'lucide:cpu',
-    iconColor: 'text-orange-500',
-    logo: 'https://gpt4all.io/assets/images/gpt4all-128.png',
-    image: '',
-  },
-  {
-    id: 'perplexity',
-    title: 'Perplexity AI',
-    description: '基于AI的搜索引擎，提供准确、实时的信息和引用来源',
-    provider: 'Perplexity',
-    category: 'llm',
-    url: 'https://www.perplexity.ai',
-    icon: 'simple-icons:perplexity',
-    iconColor: 'text-purple-600',
-    logo: 'https://cdn.icon-icons.com/icons2/3698/PNG/512/ai_perplexity_logo_icon_230374.png',
-    image: '',
-  },
-  {
-    id: 'mistral',
-    title: 'Mistral AI',
-    description: '法国初创公司开发的高性能开源大语言模型',
-    provider: 'Mistral AI',
-    category: 'llm',
-    url: 'https://mistral.ai',
-    icon: 'lucide:wind',
-    iconColor: 'text-sky-500',
-    logo: 'https://mistral.ai/images/logo.svg',
-    image: '',
-  },
-
-  // AI编程工具
-  {
-    id: 'cursor',
-    title: 'Cursor',
-    description: '基于VSCode的AI编辑器，提供代码生成、解释和重构功能',
-    provider: 'Cursor',
-    category: 'coding',
-    url: 'https://cursor.sh',
-    icon: 'vscode-icons:file-type-cursorrules',
-    iconColor: 'text-blue-500',
-    logo: 'https://cursor.sh/apple-touch-icon.png',
-    image: '',
-  },
-  {
-    id: 'github-copilot',
-    title: 'GitHub Copilot',
-    description: 'GitHub和OpenAI合作开发的AI编程助手，提供代码建议和自动完成',
-    provider: 'GitHub',
-    category: 'coding',
-    url: 'https://github.com/features/copilot',
-    icon: 'simple-icons:githubcopilot',
-    iconColor: 'text-gray-500',
-    logo: 'https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png',
-    image: '',
-  },
-  {
-    id: 'trae',
-    title: 'Trae',
-    description: '国内出品的第一款桌面端AI IDE，提供智能编程辅助功能',
-    provider: 'Trae',
-    category: 'coding',
-    url: 'https://trae.cn',
-    icon: '4agi:trae',
-    iconColor: 'text-red-500',
-    logo: 'https://trae.cn/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'codeium',
-    title: 'Codeium',
-    description: '免费的AI编码助手，支持多种IDE和编程语言',
-    provider: 'Codeium',
-    category: 'coding',
-    url: 'https://codeium.com',
-    icon: 'lucide:code-2',
-    iconColor: 'text-green-500',
-    logo: 'https://codeium.com/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'tabnine',
-    title: 'Tabnine',
-    description: '基于AI的代码自动完成工具，支持多种编程语言和IDE',
-    provider: 'Tabnine',
-    category: 'coding',
-    url: 'https://www.tabnine.com',
-    icon: 'simple-icons:tabnine',
-    iconColor: 'text-blue-600',
-    logo: 'https://www.tabnine.com/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'replit-ghostwriter',
-    title: 'Replit Ghostwriter',
-    description: 'Replit平台的AI编程助手，提供代码生成和解释功能',
-    provider: 'Replit',
-    category: 'coding',
-    url: 'https://replit.com/ghostwriter',
-    icon: 'simple-icons:replit',
-    iconColor: 'text-orange-500',
-    logo: 'https://replit.com/public/icons/favicon-196.png',
-    image: '',
-  },
-  {
-    id: 'amazon-codewhisperer',
-    title: 'Amazon CodeWhisperer',
-    description: '亚马逊开发的AI编程助手，提供实时代码建议和安全扫描',
-    provider: 'Amazon',
-    category: 'coding',
-    url: 'https://aws.amazon.com/codewhisperer',
-    icon: 'simple-icons:amazonaws',
-    iconColor: 'text-yellow-600',
-    logo: 'https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico',
-    image: '',
-  },
-
-  // AI图像生成
-  {
-    id: 'midjourney',
-    title: 'Midjourney',
-    description: '基于Discord的AI图像生成工具，以艺术性和创意著称',
-    provider: 'Midjourney',
-    category: 'image',
-    url: 'https://midjourney.com',
-    icon: 'simple-icons:midjourney',
-    iconColor: 'text-indigo-500',
-    logo: 'https://www.midjourney.com/apple-touch-icon.png',
-    image: 'https://images.unsplash.com/photo-1682687982501-1e58ab814714',
-  },
-  {
-    id: 'dall-e',
-    title: 'DALL-E 3',
-    description: 'OpenAI开发的文本到图像生成模型，能够创建高度详细和准确的图像',
-    provider: 'OpenAI',
-    category: 'image',
-    url: 'https://openai.com/dall-e-3',
-    icon: 'simple-icons:openai',
-    iconColor: 'text-emerald-500',
-    logo: 'https://openai.com/favicon.ico',
-    image: 'https://images.unsplash.com/photo-1686191128892-ba4a1635b76c?q=80&w=1000',
-  },
-  {
-    id: 'stable-diffusion',
-    title: 'Stable Diffusion',
-    description: '开源的文本到图像生成模型，可本地部署和自定义训练',
-    provider: 'Stability AI',
-    category: 'image',
-    url: 'https://stability.ai',
-    icon: 'simple-icons:stabilityai',
-    iconColor: 'text-yellow-500',
-    logo: 'https://stability.ai/favicon.ico',
-    image: 'https://images.unsplash.com/photo-1684891002585-a3986c2d02d1?q=80&w=1000',
-  },
-  {
-    id: 'leonardo-ai',
-    title: 'Leonardo.AI',
-    description: 'AI创意工具平台，提供高质量图像生成和自定义模型训练',
-    provider: 'Leonardo.AI',
-    category: 'image',
-    url: 'https://leonardo.ai',
-    icon: 'lucide:palette',
-    iconColor: 'text-pink-500',
-    logo: 'https://leonardo.ai/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'adobe-firefly',
-    title: 'Adobe Firefly',
-    description: 'Adobe开发的生成式AI创意工具，集成于Creative Cloud套件',
-    provider: 'Adobe',
-    category: 'image',
-    url: 'https://firefly.adobe.com',
-    icon: 'simple-icons:adobe',
-    iconColor: 'text-red-600',
-    logo: 'https://www.adobe.com/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'canva-text-to-image',
-    title: 'Canva Text to Image',
-    description: 'Canva平台集成的AI图像生成工具，适合设计和营销使用',
-    provider: 'Canva',
-    category: 'image',
-    url: 'https://www.canva.com/ai-image-generator',
-    icon: 'simple-icons:canva',
-    iconColor: 'text-blue-500',
-    logo: 'https://www.canva.com/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'runway-gen-2',
-    title: 'Runway Gen-2',
-    description: '先进的图像和视频生成模型，支持文本到图像和图像到图像转换',
-    provider: 'Runway',
-    category: 'image',
-    url: 'https://runwayml.com/ai-magic-tools/gen-2',
-    icon: 'simple-icons:runway',
-    iconColor: 'text-green-500',
-    logo: 'https://runwayml.com/favicon.ico',
-    image: '',
-  },
-
-  // AI音频和视频
-  {
-    id: 'elevenlabs',
-    title: 'ElevenLabs',
-    description: 'AI语音生成和克隆工具，提供逼真的多语言语音合成',
-    provider: 'ElevenLabs',
-    category: 'audio-video',
-    url: 'https://elevenlabs.io',
-    icon: 'simple-icons:elevenlabs',
-    iconColor: 'text-purple-500',
-    logo: 'https://elevenlabs.io/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'runway',
-    title: 'Runway',
-    description: 'AI视频生成和编辑工具，支持文本到视频、图像到视频等功能',
-    provider: 'Runway',
-    category: 'audio-video',
-    url: 'https://runwayml.com',
-    icon: 'simple-icons:runway',
-    iconColor: 'text-green-500',
-    logo: 'https://runwayml.com/favicon.ico',
-    image: 'https://images.unsplash.com/photo-1682687982501-1e58ab814714?q=80&w=1000',
-  },
-  {
-    id: 'synthesia',
-    title: 'Synthesia',
-    description: 'AI视频生成平台，可从文本创建逼真的数字人视频',
-    provider: 'Synthesia',
-    category: 'audio-video',
-    url: 'https://www.synthesia.io',
-    icon: 'lucide:video',
-    iconColor: 'text-blue-500',
-    logo: 'https://www.synthesia.io/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'descript',
-    title: 'Descript',
-    description: 'AI驱动的音频和视频编辑平台，提供转录、编辑和合成功能',
-    provider: 'Descript',
-    category: 'audio-video',
-    url: 'https://www.descript.com',
-    icon: 'lucide:mic',
-    iconColor: 'text-red-500',
-    logo: 'https://www.descript.com/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'murf',
-    title: 'Murf AI',
-    description: 'AI语音生成平台，提供自然逼真的文本到语音转换',
-    provider: 'Murf',
-    category: 'audio-video',
-    url: 'https://murf.ai',
-    icon: 'lucide:volume-2',
-    iconColor: 'text-blue-400',
-    logo: 'https://murf.ai/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'heygen',
-    title: 'HeyGen',
-    description: 'AI视频生成平台，可创建多语言的数字人视频',
-    provider: 'HeyGen',
-    category: 'audio-video',
-    url: 'https://www.heygen.com',
-    icon: 'lucide:video',
-    iconColor: 'text-indigo-500',
-    logo: 'https://www.heygen.com/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'suno',
-    title: 'Suno',
-    description: 'AI音乐生成工具，可从文本描述创建完整歌曲',
-    provider: 'Suno',
-    category: 'audio-video',
-    url: 'https://suno.ai',
-    icon: 'lucide:music',
-    iconColor: 'text-pink-500',
-    logo: 'https://suno.ai/favicon.ico',
-    image: '',
-  },
-
-  // AI研究和开发
-  {
-    id: 'huggingface',
-    title: 'Hugging Face',
-    description: 'AI社区和模型库，提供开源模型、数据集和工具',
-    provider: 'Hugging Face',
-    category: 'research',
-    url: 'https://huggingface.co',
-    icon: 'simple-icons:huggingface',
-    iconColor: 'text-yellow-500',
-    logo: 'https://huggingface.co/favicon.ico',
-    image: 'https://images.unsplash.com/photo-1655720828018-edd2daec9349?q=80&w=1000',
-  },
-  {
-    id: 'langchain',
-    title: 'LangChain',
-    description: '开发LLM应用的框架，提供链接外部数据源和API的能力',
-    provider: 'LangChain',
-    category: 'research',
-    url: 'https://www.langchain.com',
-    icon: 'simple-icons:langchain',
-    iconColor: 'text-green-500',
-    logo: 'https://www.langchain.com/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'pinecone',
-    title: 'Pinecone',
-    description: '向量数据库，为AI应用提供高效的相似性搜索和检索',
-    provider: 'Pinecone',
-    category: 'research',
-    url: 'https://www.pinecone.io',
-    icon: 'simple-icons:pinecone',
-    iconColor: 'text-purple-500',
-    logo: 'https://www.pinecone.io/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'weights-biases',
-    title: 'Weights & Biases',
-    description: '机器学习实验跟踪和模型管理平台',
-    provider: 'W&B',
-    category: 'research',
-    url: 'https://wandb.ai',
-    icon: 'simple-icons:weightsandbiases',
-    iconColor: 'text-yellow-600',
-    logo: 'https://wandb.ai/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'pytorch',
-    title: 'PyTorch',
-    description: '开源机器学习框架，广泛用于研究和生产环境',
-    provider: 'Meta',
-    category: 'research',
-    url: 'https://pytorch.org',
-    icon: 'simple-icons:pytorch',
-    iconColor: 'text-orange-500',
-    logo: 'https://pytorch.org/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'tensorflow',
-    title: 'TensorFlow',
-    description: 'Google开发的开源机器学习平台，支持多种应用场景',
-    provider: 'Google',
-    category: 'research',
-    url: 'https://www.tensorflow.org',
-    icon: 'simple-icons:tensorflow',
-    iconColor: 'text-orange-600',
-    logo: 'https://www.tensorflow.org/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'cohere',
-    title: 'Cohere',
-    description: '提供企业级NLP API，用于构建语言理解和生成应用',
-    provider: 'Cohere',
-    category: 'research',
-    url: 'https://cohere.ai',
-    icon: 'lucide:braces',
-    iconColor: 'text-blue-500',
-    logo: 'https://cohere.ai/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'modal',
-    title: 'Modal',
-    description: '云端AI和计算平台，简化大规模AI应用部署',
-    provider: 'Modal',
-    category: 'research',
-    url: 'https://modal.com',
-    icon: 'lucide:cloud',
-    iconColor: 'text-indigo-500',
-    logo: 'https://modal.com/favicon.ico',
-    image: '',
-  },
-
-  // 新增分类：AI助手和工具
-  {
-    id: 'notion-ai',
-    title: 'Notion AI',
-    description: 'Notion集成的AI助手，提供写作、总结和头脑风暴功能',
-    provider: 'Notion',
-    category: 'assistant',
-    url: 'https://www.notion.so/product/ai',
-    icon: 'simple-icons:notion',
-    iconColor: 'text-gray-600',
-    logo: 'https://www.notion.so/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'jasper',
-    title: 'Jasper',
-    description: 'AI内容创作平台，帮助团队创建营销内容和文案',
-    provider: 'Jasper',
-    category: 'assistant',
-    url: 'https://www.jasper.ai',
-    icon: 'lucide:pen-tool',
-    iconColor: 'text-orange-500',
-    logo: 'https://www.jasper.ai/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'grammarly',
-    title: 'Grammarly',
-    description: 'AI写作助手，提供语法检查、拼写纠正和写作建议',
-    provider: 'Grammarly',
-    category: 'assistant',
-    url: 'https://www.grammarly.com',
-    icon: 'simple-icons:grammarly',
-    iconColor: 'text-green-600',
-    logo: 'https://www.grammarly.com/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'otter-ai',
-    title: 'Otter.ai',
-    description: 'AI会议记录和转录工具，实时记录和总结会议内容',
-    provider: 'Otter.ai',
-    category: 'assistant',
-    url: 'https://otter.ai',
-    icon: 'lucide:file-text',
-    iconColor: 'text-purple-500',
-    logo: 'https://otter.ai/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'chatpdf',
-    title: 'ChatPDF',
-    description: '与PDF文档对话的AI工具，快速提取和理解文档内容',
-    provider: 'ChatPDF',
-    category: 'assistant',
-    url: 'https://www.chatpdf.com',
-    icon: 'lucide:file-text',
-    iconColor: 'text-red-500',
-    logo: 'https://www.chatpdf.com/favicon.ico',
-    image: '',
-  },
-  {
-    id: 'mem',
-    title: 'Mem',
-    description: 'AI驱动的工作空间，帮助组织和检索信息',
-    provider: 'Mem',
-    category: 'assistant',
-    url: 'https://mem.ai',
-    icon: 'lucide:brain',
-    iconColor: 'text-blue-500',
-    logo: 'https://mem.ai/favicon.ico',
-    image: '',
-  },
-];
+// const categories = [
+//   { id: 'llm', name: '大语言模型' },
+//   { id: 'coding', name: 'AI编程工具' },
+//   { id: 'image', name: 'AI图像生成' },
+//   { id: 'audio-video', name: 'AI音频和视频' },
+//   { id: 'research', name: 'AI研究和开发' },
+//   { id: 'assistant', name: 'AI助手和工具' },
+// ];
 
 // 状态管理
 const activeCategory = ref('all');

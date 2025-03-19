@@ -1,0 +1,70 @@
+[
+  {
+    "id": "ai_tools",
+    "name": "AI工具"
+  },
+  {
+    "id": "analytics",
+    "name": "数据分析"
+  },
+  {
+    "id": "audio",
+    "name": "音频"
+  },
+  {
+    "id": "chat",
+    "name": "聊天"
+  },
+  {
+    "id": "coding",
+    "name": "编程"
+  },
+  {
+    "id": "design",
+    "name": "设计"
+  },
+  {
+    "id": "education",
+    "name": "教育"
+  },
+  {
+    "id": "finance",
+    "name": "金融"
+  },
+  {
+    "id": "hr",
+    "name": "人力资源"
+  },
+  {
+    "id": "image",
+    "name": "图像"
+  },
+  {
+    "id": "marketing",
+    "name": "营销"
+  },
+  {
+    "id": "productivity",
+    "name": "生产力"
+  },
+  {
+    "id": "research",
+    "name": "研究"
+  },
+  {
+    "id": "search",
+    "name": "搜索"
+  },
+  {
+    "id": "translate",
+    "name": "翻译"
+  },
+  {
+    "id": "video",
+    "name": "视频"
+  },
+  {
+    "id": "writing",
+    "name": "写作"
+  }
+]
