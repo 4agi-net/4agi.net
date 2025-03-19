@@ -4,18 +4,19 @@ RUN mkdir -p /home/app/
 
 WORKDIR /home/app/
 
-RUN npm i pnpm -g
+# 安装特定版本的 pnpm，与项目兼容
+RUN npm i pnpm@10.6.4 -g
 
 COPY package.json ./
 
-# COPY pnpm-lock.yaml ./
-
-COPY . .
+COPY pnpm-lock.yaml ./
 
 # 清空可能存在的 node_modules 目录和 pnpm 缓存
 RUN rm -rf node_modules && pnpm store prune
 
 RUN pnpm install
+
+COPY . .
 
 RUN pnpm build
 
