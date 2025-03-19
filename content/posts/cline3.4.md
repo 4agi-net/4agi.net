@@ -1,4 +1,18 @@
-# 🚀 Cline 3.4 来了！支持 DeepSeek
+---
+title: 🚀 Cline 3.4 来了！支持 DeepSeek
+description: ''
+image: https://cdn.4agi.net/2025/03/1742368263880.png
+icon: iconoir:post
+authors:
+  - name: Captain
+    avatar:
+      src: https://avatars.githubusercontent.com/u/41095458?v=4
+    to: https://x.com/XCaptaincc
+    username: Captain
+date: 2025-03-19
+category: Agent
+---
+
 Cline 3.4 更新介绍：智能编码迎来新高度
 
 2025 年 2 月 21 日，Cline 3.4 正式发布，作为一款运行于 IDE 中的自主 AI 编码助手，此次更新带来了令人振奋的新功能和改进，进一步提升了开发者的生产力与体验。以下是 Cline 3.4 的核心亮点：
