@@ -226,7 +226,9 @@
 <script setup lang="ts">
 import ContentHero from '@/components/content/Hero.vue';
 import categories from './categories.json';
-import products from './products.json';
+// import products from './products.json';
+
+const products = [];
 
 interface PageData {
   title: string;
