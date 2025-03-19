@@ -176,7 +176,7 @@
                 </div>
               </div>
               <UiCardHeader :class="{ 'p-3': isCompactGrid, 'p-4': !isCompactGrid }">
-                <UiCardTitle :class="{ 'text-base': isCompactGrid }">
+                <UiCardTitle class="line-clamp-1" :class="{ 'text-base': isCompactGrid }">
                   {{ product.name }}
                 </UiCardTitle>
                 <UiCardDescription

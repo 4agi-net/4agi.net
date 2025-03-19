@@ -9,6 +9,11 @@ export default defineNuxtConfig({
     url: 'https://4agi.net',
     name: '4AGI',
   },
+  ogImage: {
+    fonts: [
+      'Noto+Sans+SC:600',
+    ],
+  },
   ssr: true,
   modules: [
     '@nuxthq/studio',
