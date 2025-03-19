@@ -3,7 +3,6 @@ const description = '从代码到通用智能，从独行到共创未来，未�
 export default defineAppConfig({
   custom: {
     site: {
-      url: 'https://4agi.net',
       name: '4AGI',
       description,
       ogImage: '/hero.png',

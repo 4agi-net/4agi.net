@@ -5,6 +5,10 @@ const currentDir = dirname(fileURLToPath(import.meta.url));
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  site: {
+    url: 'https://4agi.net',
+    name: '4AGI',
+  },
   ssr: true,
   modules: [
     '@nuxthq/studio',
