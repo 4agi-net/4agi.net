@@ -8,10 +8,10 @@ COPY . .
 
 RUN npm i pnpm@10.6.4 -g
 
-RUN rm -f pnpm-lock.yaml
+# RUN rm -f pnpm-lock.yaml
 
 # 清空可能存在的 node_modules 目录和 pnpm 缓存
-RUN rm -rf node_modules && pnpm store prune
+# RUN rm -rf node_modules && pnpm store prune
 
 RUN pnpm install
 
