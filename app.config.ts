@@ -53,6 +53,11 @@ export default defineAppConfig({
           description: '国内出品的第一款桌面端 AI IDE，快来上手学习吧！',
           target: '_self',
           icon: '4agi:trae',
+        }, {
+          title: 'AGI 洞察',
+          to: '/docs/agi/aicoding',
+          description: 'ai 技术与应用的深度洞察',
+          icon: '4agi:4agi',
         }],
       }, {
         title: '社区',

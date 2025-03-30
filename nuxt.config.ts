@@ -81,6 +81,7 @@ export default defineNuxtConfig({
       icons: [
         '4agi:trae',
         '4agi:logo',
+        '4agi:4agi',
       ],
       scan: true,
       sizeLimitKb: 512,
